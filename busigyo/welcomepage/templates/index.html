@@ -1,0 +1,23 @@
+<!doctype html>
+{% load static %}
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>MASUNO SLEEP :) HAPPY NIGHT</title>
+  </head>
+  <body>
+    <h1>MASUNOは寝ています</h1>
+    <h2>{{ insert_something }}</h2>
+    <h2>{{ test3 }}</h2>
+    <h2>{{ test }}</h2>
+    <img src="{% static "images/100.png" %}" alt="表示できません">
+    <p>作成者は<b>{{ name }}</b>です。</p>
+    <h2>タイトル表示</h2>
+    <ul>
+      {% for title in images_titles %}
+      image=image/{{ title }}.png
+          <li><img src="{% static "images/100.png" %}" alt="表示できません"></li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
