@@ -4,6 +4,7 @@ from welcomepage import views
 app_name='welcomepage'
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.forecast, name='forcast'),
+    # path('a', views.index, name='index'),
     #path('masuno', views.index2, name='aaa'),
 ]

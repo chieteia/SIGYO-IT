@@ -1,0 +1,24 @@
+<!doctype html>
+{% load static %}
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <h1>Weather fit</h1>
+    <h1>場所 : {{ location }}</h1>
+    <h1>緯度 : {{ lat }}</h1>
+    <h1>経度 : {{ lon }}</h1>
+  </body>
+    <form action="{% url 'welcomepage:forcast' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="送信">
+    </form>
+        <ul>
+      {% for title in images_titles %}
+          <img src="{{ image_head }}{{ title }}{{ image_tail }}" alt="表示できません">
+        {% comment %}<p>{{ title }}</p>{% endcomment %}
+      {% endfor %}
+    </ul>
+</html>

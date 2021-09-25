@@ -6,9 +6,9 @@
   </head>
   <body>
     <ul>
-      {% comment %}{% for title in images_titles %}
+      {% for title in images_titles %}
           <li><img src="{{ image_head }}{{ title }}{{ image_tail }}" alt="表示できません"></li>
-      {% endfor %}{% endcomment %}
+      {% endfor %}
       <p><img src="{{ image_head }}{{ image_num }}{{ image_tail }}" alt="表示できません"></p>
     </ul>
     <form action="{% url 'welcomepage:index' %}" method="post">

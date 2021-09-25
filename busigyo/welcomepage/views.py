@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from .forms import TestForm
+import requests
+import geocoder
+from .forms import TestForm,Form
 
 # Create your views here.
 
 #from django.http import HttpResponse
-
 
 image_text = """
 100 晴れ
@@ -188,28 +189,86 @@ image_text = """
 """
 
 
-def index(request):
-    li=[]
+#def index(request):
+#    li=[]
 
-    for i in image_text.split():
-        if i.isdigit():
-            li+=[i]
-    my_dict = {
-        'insert_something':"ますのは夢の中です",
-        'test':"ますのはエッチです",
-		'name':"MASUNO",
-        'image_head':"static/images/",
-        #'images_titles': li,
-        'image_num':'100',
-        'image_tail':".png",
-        'form': TestForm(),
-        'insert_forms': '',
+#    for i in image_text.split():
+#        if i.isdigit():
+#            li+=[i]
+#    my_dict = {
+#        'image_head':"static/images/",
+#        #'images_titles': li,
+#        'image_num':'100',
+#        'image_tail':".png",
+#        'form': TestForm(),
+#        'insert_forms': '',
+#    }
+#    if (request.method == 'POST'):
+#        #my_dict['insert_forms'] = '文字列:' + request.POST['text'] + '\n整数型:' + request.POST['num']
+#        #my_dict['form'] = TestForm(request.POST)
+#        my_dict['image_num'] = request.POST['num'];
+#    return render(request, 'index.html',my_dict)
+
+#def index2(request):
+#    return HttpRespnse("MASUNO SLEEP MODE")
+
+API_Key = 'ciCs66mDVE6OUlonzEs6R95ouMHi5sV7jiAPV0Hf'
+HEADERS = {'X-API-Key': API_Key}
+URL = 'https://wxtech.weathernews.com/api/v1/ss1wx'
+
+def forecast(request):
+    wx_list=[]
+    location = '東京都'
+    print("forecast entered")
+
+    # ここのパラメーター変えたい
+    query = {
+        'lat': 35.6658607,
+        'lon': 140.3178646,
     }
     if (request.method == 'POST'):
         #my_dict['insert_forms'] = '文字列:' + request.POST['text'] + '\n整数型:' + request.POST['num']
         #my_dict['form'] = TestForm(request.POST)
-        my_dict['image_num'] = request.POST['num'];
-    return render(request, 'index.html',my_dict)
+        #print(request.POST)
+        location = request.POST['loc']
+        #現在地を取得
+        latlon = geocoder.osm(location, timeout=5.0).latlng
+        query['lat'] = latlon[0]
+        query['lon'] = latlon[1]
+        #query['lat'] = request.POST['lat']
+        #query['lon'] = request.POST['lon']
 
-#def index2(request):
-#    return HttpRespnse("MASUNO SLEEP MODE")
+    r = requests.get(URL, params=query, headers=HEADERS)
+    data=r.json()
+
+    # print("response", data)
+    # print()
+    # print(data["requestId"])
+    srf=data["wxdata"][0]["srf"]
+    for i in srf:
+        wx_list+=[i['wx']]
+
+    my_dict = {
+        'image_head':"static/images/",
+        'images_titles': wx_list,
+        'location': location,
+        'image_num':'100',
+        'image_tail':".png",
+        'form': Form(),
+        'insert_forms': '',
+        'lat': query['lat'],
+        'lon': query['lon'],
+    }
+    return render(request, 'forcast.html',my_dict)
+
+#forecast(1)
+
+#geo_request_url = 'https://get.geojs.io/v1/ip/geo.json'
+#data = requests.get(geo_request_url).json()
+#print(data['latitude'])
+#print(data['longitude'])
+#print(data)
+
+#place = '八街市'
+#ret = geocoder.osm(place, timeout=5.0).latlng
+#print(place, ret[0])
