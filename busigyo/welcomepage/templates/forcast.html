@@ -9,15 +9,23 @@
     <h1>場所 : {{ location }}</h1>
     <h1>緯度 : {{ lat }}</h1>
     <h1>経度 : {{ lon }}</h1>
+    <h1>最大体感気温 : {{ max_feeltmp }}</h1>
+    <h1>最小体感気温 : {{ min_feeltmp }}</h1>
+    <h1>トップス : {{ tops_message }}</h1>
+    <h1>ボトムス : {{ bottoms_message }}</h1>
+    <h1>シューズ : {{ shoes_message }}</h1>
+    <h1>{{ temp_diff_message }}</h1>
   </body>
     <form action="{% url 'welcomepage:forcast' %}" method="post">
         {% csrf_token %}
         {{ form }}
         <input type="submit" value="送信">
     </form>
-        <ul>
-      {% for title in images_titles %}
+    <ul>
+      {% for title, feeltemp, feelidx in zipped_data %}
           <img src="{{ image_head }}{{ title }}{{ image_tail }}" alt="表示できません">
+          <p>体感気温 : {{ feeltemp }}</p>
+          <p>体感インデックス : {{ feelidx }}</p>
         {% comment %}<p>{{ title }}</p>{% endcomment %}
       {% endfor %}
     </ul>

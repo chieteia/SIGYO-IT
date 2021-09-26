@@ -218,6 +218,8 @@ URL = 'https://wxtech.weathernews.com/api/v1/ss1wx'
 
 def forecast(request):
     wx_list=[]
+    feeltmp_list=[]
+    feelidx_list=[]
     location = '東京都'
     print("forecast entered")
 
@@ -245,12 +247,51 @@ def forecast(request):
     # print()
     # print(data["requestId"])
     srf=data["wxdata"][0]["srf"]
-    for i in srf:
+    for i in srf[0:12]:
         wx_list+=[i['wx']]
+        feeltmp_list+=[i['feeltmp']]
+        feelidx_list+=[i['feelidx']]
 
+    max_feelidx = max(feelidx_list)
+    min_feelidx = min(feelidx_list)
+    tops_table = {
+        'A': '熱中症に注意した服装を心がけましょう。',
+        'B': '薄手布地の長袖がお勧めです。',
+        'C': '薄い布地では少し肌寒いです。',
+        'D': '肌寒いので上着は忘れずに。',
+        'E': '厚手の上着で体温を調節しましょう。',
+        'F': '最大限の防寒を忘れずに。',
+    }
+
+    bottoms_table = {
+        'A': '涼しい布地がお勧めです。',
+        'B': '薄手の長ズボンがお勧めです。',
+        'C': '長ズボンがお勧めです。',
+        'D': '厚手の長ズボンがお勧めです。',
+        'E': '厚手の長ズボンがお勧めです。',
+        'F': 'できるだけ厚手のものを選びましょう。',
+    }
+
+    shoes_table = {
+        'A': 'サンダルまたはスニーカーがお勧めです。',
+        'B': 'スニーカーがお勧めです。',
+        'C': 'スニーカーがお勧めです。',
+        'D': '厚めの靴下を着用しましょう。',
+        'E': '厚手の長ズボンがお勧めです。',
+        'F': '厚手の靴下を着用しましょう。',
+    }
     my_dict = {
         'image_head':"static/images/",
         'images_titles': wx_list,
+        'feeltmp_list': feeltmp_list,
+        'feelidx_list': feelidx_list,
+        'zipped_data': zip(wx_list, feeltmp_list, feelidx_list),
+        'max_feeltmp': max(feeltmp_list),
+        'min_feeltmp': min(feeltmp_list),
+        'tops_message': '',
+        'bottoms_message': '',
+        'shoes_message': '',
+        'temp_diff_message': '',
         'location': location,
         'image_num':'100',
         'image_tail':".png",
@@ -259,6 +300,39 @@ def forecast(request):
         'lat': query['lat'],
         'lon': query['lon'],
     }
+
+    if (max_feelidx >= 6):
+        my_dict['tops_message'] = tops_table['A']
+        my_dict['bottoms_message'] = bottoms_table['A']
+        my_dict['shoes_message'] = shoes_table['A']
+    elif (max_feelidx == 5):
+        my_dict['tops_message'] = tops_table['B']
+        my_dict['bottoms_message'] = bottoms_table['B']
+        my_dict['shoes_message'] = shoes_table['B']
+    elif (max_feelidx == 4):
+        my_dict['tops_message'] = tops_table['C']
+        my_dict['bottoms_message'] = bottoms_table['C']
+        my_dict['shoes_message'] = shoes_table['C']
+    elif (max_feelidx == 3):
+        my_dict['tops_message'] = tops_table['D']
+        my_dict['bottoms_message'] = bottoms_table['D']
+        my_dict['shoes_message'] = shoes_table['D']
+    elif (max_feelidx == 2):
+        my_dict['tops_message'] = tops_table['E']
+        my_dict['bottoms_message'] = bottoms_table['E']
+        my_dict['shoes_message'] = shoes_table['E']
+    else:
+        my_dict['tops_message'] = tops_table['F']
+        my_dict['bottoms_message'] = bottoms_table['F']
+        my_dict['shoes_message'] = shoes_table['F']
+
+    if ((max_feelidx >= 6) & (min_feelidx <= 4)):
+        my_dict['temp_diff_message'] = '昼夜の温度差が激しいので上着を用意しましょう。'
+    elif ((max_feelidx == 5) & (min_feelidx <= 3)):
+        my_dict['temp_diff_message'] = '昼夜の温度差が激しいので上着を用意しましょう。'
+    elif ((max_feelidx == 4) & (min_feelidx <= 2)):
+        my_dict['temp_diff_message'] = '朝晩は冷え込むので上着は忘れずに持参しましょう。'
+
     return render(request, 'forcast.html',my_dict)
 
 #forecast(1)
