@@ -282,12 +282,16 @@ def forecast(request):
     }
     my_dict = {
         'image_head':"static/images/",
+        'today_weather': data["wxdata"][0]["mrf"][0]['wx'],
         'images_titles': wx_list,
         'feeltmp_list': feeltmp_list,
         'feelidx_list': feelidx_list,
         'zipped_data': zip(wx_list, feeltmp_list, feelidx_list),
         'max_feeltmp': max(feeltmp_list),
         'min_feeltmp': min(feeltmp_list),
+        'max_tmp': data["wxdata"][0]["mrf"][0]['maxtemp'],
+        'min_tmp': data["wxdata"][0]["mrf"][0]['mintemp'],
+        'pop_message': '',
         'tops_message': '',
         'bottoms_message': '',
         'shoes_message': '',
@@ -332,6 +336,9 @@ def forecast(request):
         my_dict['temp_diff_message'] = '昼夜の温度差が激しいので上着を用意しましょう。'
     elif ((max_feelidx == 4) & (min_feelidx <= 2)):
         my_dict['temp_diff_message'] = '朝晩は冷え込むので上着は忘れずに持参しましょう。'
+
+    if (data["wxdata"][0]["mrf"][0]['pop'] > 50):
+        my_dict['pop_message'] = '傘を持っていきましょう。'
 
     return render(request, 'forcast.html',my_dict)
 

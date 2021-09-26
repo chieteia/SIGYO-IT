@@ -5,6 +5,6 @@ class TestForm(forms.Form):
 
 
 class Form(forms.Form):
-	loc = forms.CharField(label='場所', max_length='100', required=True)
+	loc = forms.CharField(label = '', max_length='100', required=True)
 	#lat = forms.FloatField(label='緯度')
 	#lon = forms.FloatField(label='経度')

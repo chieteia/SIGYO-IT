@@ -5,28 +5,44 @@
     <meta charset="utf-8">
   </head>
   <body>
-    <h1>Weather fit</h1>
-    <h1>場所 : {{ location }}</h1>
-    <h1>緯度 : {{ lat }}</h1>
-    <h1>経度 : {{ lon }}</h1>
-    <h1>最大体感気温 : {{ max_feeltmp }}</h1>
-    <h1>最小体感気温 : {{ min_feeltmp }}</h1>
-    <h1>トップス : {{ tops_message }}</h1>
-    <h1>ボトムス : {{ bottoms_message }}</h1>
-    <h1>シューズ : {{ shoes_message }}</h1>
-    <h1>{{ temp_diff_message }}</h1>
+    <img src="{% static "weatherfit_logo.png" %}" alt="表示できません" align="left" width="330", height="61">
+    <br></br>
+    <br></br>
+
+    <center>
+      <form action="{% url 'welcomepage:forcast' %}" method="post">
+      {% csrf_token %} {{ form }}
+      <input type="submit" value="検索" />
+      </form>
+      <!-- <link href="static/forecast.css" rel="stylesheet" />
+      <form method="post" action="{% url 'welcomepage:forcast' %}" class="search_container">
+        <input type="text" size="25" placeholder="　キーワード検索" />
+        <input type="submit" value="検索" />
+      </form> -->
+
+      <h3>検索条件 : {{ location }}</h3>
+      <h3>緯度 : {{ lat }}  /  緯度 : {{ lon }}</h3>
+      <h3>気温: {{ max_tmp }}/{{ min_tmp }}  |  体感温度: {{ max_feeltmp }}/{{ min_feeltmp }}</h3>
+      <h3>本日の天気 </h3>
+      <img src="{{ image_head }}{{ today_weather }}{{ image_tail }}" alt="表示できません" align="middle">
+      <br></br>
+      <br></br>
+
+      <h3>{{ pop_message }}</h3>
+      <h3>トップス : {{ tops_message }}</h3>
+      <h3>ボトムス : {{ bottoms_message }}</h3>
+      <h3>シューズ : {{ shoes_message }}</h3>
+      <h3>{{ temp_diff_message }}</h3>
+    </center>
+
   </body>
-    <form action="{% url 'welcomepage:forcast' %}" method="post">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="送信">
-    </form>
-    <ul>
+
+    <!-- <ul>
       {% for title, feeltemp, feelidx in zipped_data %}
           <img src="{{ image_head }}{{ title }}{{ image_tail }}" alt="表示できません">
           <p>体感気温 : {{ feeltemp }}</p>
           <p>体感インデックス : {{ feelidx }}</p>
         {% comment %}<p>{{ title }}</p>{% endcomment %}
       {% endfor %}
-    </ul>
+    </ul> -->
 </html>

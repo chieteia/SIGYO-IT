@@ -1,0 +1,28 @@
+.search_container {
+  box-sizing: border-box;
+  border: 2px solid #3879d9;
+  display: block;
+  padding: 3px 10px;
+  border-radius: 3px;
+  height: 2.3em;
+  width: 265px;
+  overflow: hidden;
+}
+.search_container input[type="text"] {
+  border: none;
+  height: 2em;
+}
+.search_container input[type="text"]:focus {
+  outline: 0;
+}
+.search_container input[type="submit"] {
+  cursor: pointer;
+  border: none;
+  background: #3879d9;
+  color: #fff;
+  position: absolute;
+  width: 3.5em;
+  height: 3em;
+  top: -5px;
+  outline: none;
+}
