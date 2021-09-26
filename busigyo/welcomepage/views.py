@@ -220,8 +220,7 @@ def forecast(request):
     wx_list=[]
     feeltmp_list=[]
     feelidx_list=[]
-    location = '東京都'
-    print("forecast entered")
+    location = '八街市'
 
     # ここのパラメーター変えたい
     query = {
